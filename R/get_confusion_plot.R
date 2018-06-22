@@ -17,6 +17,16 @@ get_confusion_plot <- function(actual, predicted, align = 1){
   conf_prop <- get_confusion_prop_tbl(actual, predicted, align)
   conf_prop_melt <- reshape2::melt(conf_prop, variable.name= predicted, id = actual)
   
+  get_confusion_prop_tbl <- function(actual, predicted, align = 1){
+    if (!(align %in% c(1,2))) {stop("align must be 1 or 2")}
+    conf <- table(actual, predicted)
+    if (align == 2) {
+      conf <- t(conf)
+      return (t(conf / rowSums(conf)))
+    }
+    return (conf / rowSums(conf))
+  }
+  
   plt <- ggplot2::ggplot(data = conf_prop_melt, aes(x=predicted,y=actual)) +
     geom_tile(aes(fill=value)) +
     geom_text(aes(label = round(value,2))) + 
@@ -27,16 +37,6 @@ get_confusion_plot <- function(actual, predicted, align = 1){
   print(plt)
 }
 
-get_confusion_prop_tbl <- function(actual, predicted, align = 1){
-  #INPUT: two arrays. align determines whether to create row (1) or column (2) proportions
-  #OUPUT: a cross table of proportions
-  if (!(align %in% c(1,2))) {stop("align must be 1 or 2")}
-  conf <- table(actual, predicted)
-  if (align == 2) {
-    conf <- t(conf)
-    return (t(conf / rowSums(conf)))
-  }
-  return (conf / rowSums(conf))
-}
+
 
 
