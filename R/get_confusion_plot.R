@@ -14,8 +14,6 @@
 get_confusion_plot <- function(actual, predicted, align = 1){
   require(reshape2)
   require(ggplot2)
-  conf_prop <- get_confusion_prop_tbl(actual, predicted, align)
-  conf_prop_melt <- reshape2::melt(conf_prop, variable.name= predicted, id = actual)
   
   get_confusion_prop_tbl <- function(actual, predicted, align = 1){
     if (!(align %in% c(1,2))) {stop("align must be 1 or 2")}
@@ -26,6 +24,9 @@ get_confusion_plot <- function(actual, predicted, align = 1){
     }
     return (conf / rowSums(conf))
   }
+  
+  conf_prop <- get_confusion_prop_tbl(actual, predicted, align)
+  conf_prop_melt <- reshape2::melt(conf_prop, variable.name= predicted, id = actual)
   
   plt <- ggplot2::ggplot(data = conf_prop_melt, aes(x=predicted,y=actual)) +
     geom_tile(aes(fill=value)) +
