@@ -1,0 +1,12 @@
+Package: confuvision
+Title: What the Package Does (one line, title case)
+Version: 0.0.0.9000
+Authors@R: person("Noah", "Fatsi", email = "colorlace@gmail.com", role = c("aut", "cre"))
+Description: This package provides a function for visualizing confusion tables, which I have found can be useful for classification tasks *as well as* regression tasks.
+Depends: R (>= 3.4.1)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: ggplot2,
+         reshape2
+RoxygenNote: 6.0.1.9000
