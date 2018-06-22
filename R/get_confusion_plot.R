@@ -11,6 +11,22 @@
 #' @examples
 #' get_confusion_plot(c(1,2,3,3,3,3,1,1,1,2,2,3,3), c(3,2,1,3,2,3,1,1,2,1,2,3,3))
 
+get_confusion_plot <- function(actual, predicted, align = 1){
+  require(reshape2)
+  require(ggplot2)
+  conf_prop <- get_confusion_prop_tbl(actual, predicted, align)
+  conf_prop_melt <- reshape2::melt(conf_prop, variable.name= predicted, id = actual)
+  
+  plt <- ggplot2::ggplot(data = conf_prop_melt, aes(x=predicted,y=actual)) +
+    geom_tile(aes(fill=value)) +
+    geom_text(aes(label = round(value,2))) + 
+    scale_fill_gradient2(high = "darkblue", mid = "gainsboro",
+                         midpoint = 0, limit = c(0,1), space = "Lab",
+                         name = "Prop")
+  
+  print(plt)
+}
+
 get_confusion_prop_tbl <- function(actual, predicted, align = 1){
   #INPUT: two arrays. align determines whether to create row (1) or column (2) proportions
   #OUPUT: a cross table of proportions
@@ -23,18 +39,4 @@ get_confusion_prop_tbl <- function(actual, predicted, align = 1){
   return (conf / rowSums(conf))
 }
 
-get_confusion_plot <- function(actual, predicted, align = 1){
-  require(reshape2)
-  require(ggplot2)
-  conf_prop <- get_confusion_prop_tbl(actual, predicted, align)
-  conf_prop_melt <- melt(conf_prop, variable.name= predicted, id = actual)
-  
-  plt <- ggplot(data = conf_prop_melt, aes(x=predicted,y=actual)) +
-    geom_tile(aes(fill=value)) +
-    geom_text(aes(label = round(value,2))) + 
-    scale_fill_gradient2(high = "darkblue", mid = "gainsboro",
-                         midpoint = 0, limit = c(0,1), space = "Lab",
-                         name = "Prop")
-  
-  print(plt)
-}
+
