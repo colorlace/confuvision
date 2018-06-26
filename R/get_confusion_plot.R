@@ -15,8 +15,11 @@ get_confusion_plot <- function(actual, predicted, align = 1){
   require(reshape2)
   require(ggplot2)
   
-  actual_levels <- unique(actual)
-  predicted_levels <- unique(predicted)
+  if (class(actual) == "factor"){ actual_levels <- levels(actual) }
+  else { actual_levels <- unique(actual) }
+  
+  if (class(predicted) == "factor"){ predicted_levels <- levels(predicted) }
+  else { predicted_levels <- unique(predicted) }
   
   get_confusion_prop_tbl <- function(actual, predicted, align = 1){
     if (!(align %in% c(1,2))) {stop("align must be 1 or 2")}
@@ -41,5 +44,6 @@ get_confusion_plot <- function(actual, predicted, align = 1){
                          midpoint = 0, limit = c(0,1), space = "Lab",
                          name = "Prop")
   
-  print(plt)
+  #print(plt)
+  return(plt)
 }
